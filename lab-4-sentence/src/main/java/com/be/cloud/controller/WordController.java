@@ -3,8 +3,6 @@
  */
 package com.be.cloud.controller;
 
-import java.net.URI;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
@@ -38,14 +36,11 @@ public class WordController {
 		String word = null;
 
 		//List<ServiceInstance> servicesList = client.getInstances(service);
-		ServiceInstance instance = loadBalancerClient.choose("LAB-5");
+		ServiceInstance instance = loadBalancerClient.choose(service);
 
-		if (servicesList != null && servicesList.size() > 0) {
-			URI uri = servicesList.get(0).getUri();
+		if (instance != null && instance.getUri() != null) {
 
-			if (uri != null) {
-				word = new RestTemplate().getForObject(uri, String.class);
-			}
+			word = new RestTemplate().getForObject(instance.getUri(), String.class);
 		}
 
 		return word;
